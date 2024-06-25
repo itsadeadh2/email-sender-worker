@@ -1,5 +1,5 @@
 import re
-from apps.worker.src.infrastructure.exc import InvalidEmailError
+from src.infrastructure.exc import InvalidEmailError
 
 
 def validate_email(email):

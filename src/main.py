@@ -1,9 +1,9 @@
 from dotenv import load_dotenv
-from apps.worker.src.infrastructure.runner.runner import Runner
-from apps.worker.src.infrastructure.queue.queue import Queue
-from apps.worker.src.infrastructure.mail.mail import Mail
+from src.infrastructure.runner.runner import Runner
+from src.infrastructure.queue.queue import Queue
+from src.infrastructure.mail.mail import Mail
 
-from apps.worker.src.domain import ContactInfoHandler
+from src.domain import ContactInfoHandler
 
 load_dotenv()
 

@@ -1,7 +1,7 @@
 from abc import ABC
 from jinja2 import Environment, FileSystemLoader
 import pathlib
-from pydantic import BaseModel, HttpUrl, EmailStr, Field, validator
+from pydantic import BaseModel, HttpUrl, validator
 from typing import Optional
 
 

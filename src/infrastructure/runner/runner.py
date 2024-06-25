@@ -1,6 +1,6 @@
-from apps.worker.src.infrastructure.queue.queue import Queue
-from apps.worker.src.domain import Handler
-import apps.worker.src.infrastructure.exc as exc
+from src.infrastructure.queue.queue import Queue
+from src.domain import Handler
+import src.infrastructure.exc as exc
 
 
 class Runner:
