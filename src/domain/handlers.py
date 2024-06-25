@@ -1,8 +1,8 @@
 from abc import ABC
 
-from apps.worker.src.infrastructure.mail.mail import Mail
-from apps.worker.src.infrastructure.mail.templates.parsers import ContactInfoParser
-from apps.worker.src.infrastructure.validators import validate_email
+from src.infrastructure.mail.mail import Mail
+from src.infrastructure.mail.templates.parsers import ContactInfoParser
+from src.infrastructure.validators import validate_email
 
 
 class Handler(ABC):
