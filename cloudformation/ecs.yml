@@ -39,7 +39,7 @@ Resources:
       Family: "EmailSenderTask"
       NetworkMode: awsvpc
       ExecutionRoleArn: !GetAtt ECSExecutionRole.Arn
-      TaskRoleArn: !GetAtt ECSTaskRole.Arn
+      TaskRoleArn: !GetAtt ECSExecutionRole.Arn
       RequiresCompatibilities:
         - FARGATE
       Cpu: !Ref CPU
@@ -132,28 +132,6 @@ Resources:
                   - secretsmanager:GetSecretValue
                 Resource: !Ref MailgunSecret
 
-  ECSTaskRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - ecs-tasks.amazonaws.com
-            Action: sts:AssumeRole
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
-      Policies:
-        - PolicyName: "AmazonECSTaskRolePolicy"
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action:
-                  - secretsmanager:GetSecretValue
-                Resource: !Ref MailgunSecret
 
   TaskLogGroup:
     Type: AWS::Logs::LogGroup
