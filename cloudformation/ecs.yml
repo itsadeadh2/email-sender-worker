@@ -26,7 +26,7 @@ Resources:
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      Family: "EmailSenderTask"
+      Family: !Sub "${AWS::StackName}"
       NetworkMode: awsvpc
       ExecutionRoleArn: !GetAtt ECSExecutionRole.Arn
       TaskRoleArn: !GetAtt ECSExecutionRole.Arn
@@ -35,7 +35,7 @@ Resources:
       Cpu: !Ref CPU
       Memory: !Ref Memory
       ContainerDefinitions:
-        - Name: !Sub "EmailSenderService-${Revision}"
+        - Name: !Sub "${AWS::StackName}-${Revision}"
           Image:
             !Join
             - ""
@@ -63,7 +63,7 @@ Resources:
     Type: AWS::ECS::Service
     Properties:
       Cluster: !ImportValue general-cluster-export
-      ServiceName: "EmailSenderWorker"
+      ServiceName: !Sub "${AWS::StackName}"
       TaskDefinition: !Ref TaskDefinition
       DesiredCount: 1
       CapacityProviderStrategy:
