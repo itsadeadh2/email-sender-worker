@@ -39,12 +39,12 @@ Resources:
           Image:
             !Join
             - ""
-            - - !ImportValue 'email-sender-service-ecr-export'
+            - - !ImportValue 'email-worker-ecr-export'
               - !Sub ":${Revision}"
           Essential: true
           Environment:
             - Name: QUEUE_URL
-              Value: !ImportValue "email-sender-service-sqs-url-export"
+              Value: !ImportValue "email-worker-sqs-url-export"
             - Name: MAILGUN_DOMAIN
               Value: !Sub "${MailgunDomain}"
             - Name: MAILGUN_API_KEY
