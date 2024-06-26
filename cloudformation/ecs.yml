@@ -57,9 +57,15 @@ Resources:
               Value: !ImportValue "email-sender-service-sqs-url-export"
           Secrets:
             - Name: MAILGUN_DOMAIN
-              ValueFrom: !Ref MailgunSecret
+              ValueFrom: !Join
+                - ":"
+                - - !Ref MailgunSecret
+                  - ":MailgunDomain::"
             - Name: MAILGUN_API_KEY
-              ValueFrom: !Ref MailgunSecret
+              ValueFrom: !Join
+                - ":"
+                - - !Ref MailgunSecret
+                  - ":MailgunApiKey::"
           LogConfiguration:
             LogDriver: awslogs
             Options:
