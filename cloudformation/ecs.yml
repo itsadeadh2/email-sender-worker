@@ -127,6 +127,10 @@ Resources:
                 Action:
                   - ssm:*
                 Resource: "*"
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                Resource: !Ref MailgunSecret
 
   ECSTaskRole:
     Type: AWS::IAM::Role
