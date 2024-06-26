@@ -8,7 +8,7 @@ class Mail:
         self.api_key = os.getenv("MAILGUN_API_KEY")
 
     def send_email(self, to, subject, text, html=None):
-        return requests.post(
+        response = requests.post(
             f"https://api.mailgun.net/v3/{self.domain}/messages",
             auth=("api", os.getenv("MAILGUN_API_KEY")),
             data={
@@ -19,3 +19,7 @@ class Mail:
                 "html": html
             },
         )
+        if response.status_code == 200:
+            return response.json()  # Assuming the response is in JSON format
+        else:
+            response.raise_for_status()

@@ -14,15 +14,32 @@ Parameters:
     Type: String
     Description: 'The amount of vCPUs you want your task to have'
     Default: .25 vCPU
+  MailgunDomain:
+    Type: String
+    Description: 'Mailgun Domain'
+  MailgunApiKey:
+    Type: String
+    Description: 'Mailgun API Key'
 
 Resources:
+  MailgunSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: 'mailgun-credentials'
+      Description: 'Mailgun credentials for Email Sender Service'
+      SecretString: !Sub |
+        {
+          "MailgunDomain": "${MailgunDomain}",
+          "MailgunApiKey": "${MailgunApiKey}"
+        }
+
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      Family: "EmalSenderTask"
+      Family: "EmailSenderTask"
       NetworkMode: awsvpc
       ExecutionRoleArn: !GetAtt ECSExecutionRole.Arn
-      TaskRoleArn: !GetAtt ECSExecutionRole.Arn
+      TaskRoleArn: !GetAtt ECSTaskRole.Arn
       RequiresCompatibilities:
         - FARGATE
       Cpu: !Ref CPU
@@ -38,6 +55,11 @@ Resources:
           Environment:
             - Name: QUEUE_URL
               Value: !ImportValue "email-sender-service-sqs-url-export"
+          Secrets:
+            - Name: MAILGUN_DOMAIN
+              ValueFrom: !Ref MailgunSecret
+            - Name: MAILGUN_API_KEY
+              ValueFrom: !Ref MailgunSecret
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -119,6 +141,15 @@ Resources:
             Action: sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      Policies:
+        - PolicyName: "AmazonECSTaskRolePolicy"
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                Resource: !Ref MailgunSecret
 
   TaskLogGroup:
     Type: AWS::Logs::LogGroup
@@ -128,3 +159,13 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub "${AWS::StackName}"
+
+Outputs:
+  TaskDefinitionArn:
+    Value: !Ref TaskDefinition
+    Export:
+      Name: EmailSenderTaskDefinitionArn
+  ServiceName:
+    Value: !GetAtt ECSService.ServiceName
+    Export:
+      Name: EmailSenderServiceName
