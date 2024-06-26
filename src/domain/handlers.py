@@ -20,7 +20,7 @@ class ContactInfoHandler(Handler):
     def handle(self, message):
         email = message.get('Body')
         print(f'Received email: {str(email)}')
-        validate_email(message)
+        validate_email(email)
         # retrieve additional information
         parser = ContactInfoParser()
         html = parser.get_html()
