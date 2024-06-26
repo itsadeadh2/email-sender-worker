@@ -44,7 +44,7 @@ class ContactInfoParser(Parser):
     default_contact_info = ContactInfoModel(
         greeting="Hi there,",
         message="If you are receiving this email, it means that you want to contact me."
-                "Down bellow you are going to find all my relevant contact information as well as some additional info that you might be interested in:",
+                " Down bellow you are going to find all my relevant contact information as well as some additional info that you might be interested in:",
         links=LinksModel(
             email="itsadeadh2@gmail.com",
             github="https://github.com/itsadeadh2",
