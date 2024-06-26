@@ -163,13 +163,3 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub "${AWS::StackName}"
-
-Outputs:
-  TaskDefinitionArn:
-    Value: !Ref TaskDefinition
-    Export:
-      Name: EmailSenderTaskDefinitionArn
-  ServiceName:
-    Value: !GetAtt ECSService.ServiceName
-    Export:
-      Name: EmailSenderServiceName
