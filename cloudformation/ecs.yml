@@ -58,14 +58,14 @@ Resources:
           Secrets:
             - Name: MAILGUN_DOMAIN
               ValueFrom: !Join
-                - ":"
+                - ""
                 - - !Ref MailgunSecret
-                  - ":MailgunDomain::"
+                  - ":MailgunDomain:"
             - Name: MAILGUN_API_KEY
               ValueFrom: !Join
-                - ":"
+                - ""
                 - - !Ref MailgunSecret
-                  - ":MailgunApiKey::"
+                  - ":MailgunApiKey:"
           LogConfiguration:
             LogDriver: awslogs
             Options:
