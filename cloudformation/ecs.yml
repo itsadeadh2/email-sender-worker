@@ -22,6 +22,16 @@ Parameters:
     Description: 'Mailgun API Key'
 
 Resources:
+  MailgunSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: 'mailgun-credentials'
+      Description: 'Mailgun credentials for Email Sender Service'
+      SecretString: !Sub |
+        {
+          "MailgunDomain": "${MailgunDomain}",
+          "MailgunApiKey": "${MailgunApiKey}"
+        }
 
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
@@ -45,10 +55,19 @@ Resources:
           Environment:
             - Name: QUEUE_URL
               Value: !ImportValue "email-sender-service-sqs-url-export"
+          Secrets:
             - Name: MAILGUN_DOMAIN
-              Value: !Sub "${MailgunDomain}"
+              ValueFrom: !Join
+                - ""
+                - - !Ref MailgunSecret
+                  - ":mailgun-credentials:"
+                  - ":MailgunDomain"
             - Name: MAILGUN_API_KEY
-              Value: !Sub "${MailgunApiKey}"
+              ValueFrom: !Join
+                - ""
+                - - !Ref MailgunSecret
+                  - ":mailgun-credentials:"
+                  - ":MailgunApiKey"
 
           LogConfiguration:
             LogDriver: awslogs
@@ -117,6 +136,10 @@ Resources:
                 Action:
                   - ssm:*
                 Resource: "*"
+              - Effect: Allow
+                Action:
+                  - secretsmanager:GetSecretValue
+                Resource: !Ref MailgunSecret
 
 
   TaskLogGroup:
