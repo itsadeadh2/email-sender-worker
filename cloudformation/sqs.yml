@@ -16,8 +16,8 @@ Outputs:
     Value: !Ref SQSQueue
     Export:
       Name: !Sub "${AWS::StackName}-url-export"
-  QueueName:
+  QueueArn:
     Description: Name of the queue
-    Value: !GetAtt SQSQueue.QueueName
+    Value: !GetAtt SQSQueue.Arn
     Export:
-      Name: !Sub "${AWS::StackName}-name-export"
+      Name: !Sub "${AWS::StackName}-arn-export"
