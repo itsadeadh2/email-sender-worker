@@ -86,6 +86,11 @@ Resources:
     Properties:
       VpcId: !ImportValue vpc-id-export
       GroupDescription: "Security Group for Fargate Service"
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: "0.0.0.0/0"
       SecurityGroupEgress:
         - IpProtocol: -1
           CidrIp: "0.0.0.0/0"
