@@ -65,7 +65,7 @@ Resources:
       CompatibleRuntimes:
         - python3.10
       Content:
-        S3Bucket: email-sender-service-bucket
+        S3Bucket: email-worker-bucket
         S3Key: dependencies.zip
 
   MyLambdaEventSourceMapping:
