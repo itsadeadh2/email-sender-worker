@@ -18,7 +18,7 @@ class ContactInfoHandler(Handler):
         self.mail = mail
 
     def handle(self, message):
-        email = message.get('Body')
+        email = message.get('body')
         print(f'Received email: {str(email)}')
         validate_email(email)
         # retrieve additional information
