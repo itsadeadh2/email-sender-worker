@@ -73,13 +73,22 @@ Resources:
       NetworkConfiguration:
         AwsvpcConfiguration:
           Subnets:
-            - !ImportValue private-subnet-1-export
+            - !ImportValue public-subnet-1-export
           SecurityGroups:
-            - !ImportValue securitygroup-export
+            - !Ref SecurityGroup
           AssignPublicIp: DISABLED
       DeploymentConfiguration:
         MaximumPercent: 100
         MinimumHealthyPercent: 0
+
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !ImportValue vpc-id-export
+      GroupDescription: "Security Group for Fargate Service"
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: "0.0.0.0/0"
 
   ECSExecutionRole:
     Type: AWS::IAM::Role
