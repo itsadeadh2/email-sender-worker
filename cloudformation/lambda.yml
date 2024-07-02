@@ -22,6 +22,8 @@ Resources:
       Environment:
         Variables:
           QUEUE_URL: !ImportValue "email-worker-sqs-url-export"
+          MAILGUN_DOMAIN: ''
+          MAILGUN_API_KEY: ''
       Runtime: python3.10
       MemorySize: 128
       Timeout: 30

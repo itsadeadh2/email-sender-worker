@@ -1,16 +1,15 @@
 import requests
-import os
 
 
 class Mail:
-    def __init__(self):
-        self.domain = os.getenv("MAILGUN_DOMAIN")
-        self.api_key = os.getenv("MAILGUN_API_KEY")
+    def __init__(self, domain, api_key):
+        self.domain = domain
+        self.api_key = api_key
 
     def send_email(self, to, subject, text, html=None):
         response = requests.post(
             f"https://api.mailgun.net/v3/{self.domain}/messages",
-            auth=("api", os.getenv("MAILGUN_API_KEY")),
+            auth=("api", self.api_key),
             data={
                 "from": f"Thiago Barbosa via MailGun <mailgun@{self.domain}>",
                 "to": [to],
