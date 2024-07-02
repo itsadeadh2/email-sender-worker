@@ -5,6 +5,12 @@ Parameters:
   Revision:
     Type: String
     Description: The commit that originated this deployment. Helps trigger new deploys to the lambda.
+  MailgunDomain:
+    Type: String
+    Description: MailGun domain
+  MailgunApiKey:
+    Type: String
+    Description: MailGun API KEY
 
 Resources:
   MyLambdaFunction:
@@ -22,8 +28,8 @@ Resources:
       Environment:
         Variables:
           QUEUE_URL: !ImportValue "email-worker-sqs-url-export"
-          MAILGUN_DOMAIN: ''
-          MAILGUN_API_KEY: ''
+          MAILGUN_DOMAIN: !Sub "${MailgunDomain}"
+          MAILGUN_API_KEY: !Sub "${MailgunApiKey}"
       Runtime: python3.10
       MemorySize: 128
       Timeout: 30
