@@ -15,29 +15,52 @@ class ContactInfoHandler(Handler):
     def __init__(
             self,
             mail: Mail,
-            resume: ResumeProvider
+            resume: ResumeProvider,
+            logger
     ):
         self.mail = mail
         self.resume = resume
+        self.logger = logger
 
     def handle(self, message):
         email = message.get('body')
-        print(f'Received email: {str(email)}')
-        validate_email(email)
+        self.logger.info(f"Received email: {str(email)}")
+        try:
+            validate_email(email)
+            self.logger.info(f"Email {email} validated successfully")
+        except ValueError as e:
+            self.logger.error(f"Validation error for email {email}: {e}")
+            raise
 
-        resume_file_data = self.resume.retrieve()
+        try:
+            resume_file_data = self.resume.retrieve()
+            self.logger.info("Resume retrieved successfully")
+        except Exception as e:
+            self.logger.error(f"Error retrieving resume: {e}")
+            raise
+
         attachments = {
             'attachment': resume_file_data
         }
 
-        # retrieve additional information
-        parser = ContactInfoParser()
-        html = parser.get_html()
-        text = parser.get_text()
-        self.mail.send_email(
-            to=email,
-            subject="Contact Information - Thiago Barbosa",
-            text=text,
-            html=html,
-            files=attachments
-        )
+        try:
+            parser = ContactInfoParser()
+            html = parser.get_html()
+            text = parser.get_text()
+            self.logger.info("Parsed contact information successfully")
+        except Exception as e:
+            self.logger.error(f"Error parsing contact information: {e}")
+            raise
+
+        try:
+            self.mail.send_email(
+                to=email,
+                subject="Contact Information - Thiago Barbosa",
+                text=text,
+                html=html,
+                files=attachments
+            )
+            self.logger.info(f"Email sent successfully to {email}")
+        except Exception as e:
+            self.logger.error(f"Error sending email to {email}: {e}")
+            raise

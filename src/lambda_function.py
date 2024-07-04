@@ -5,6 +5,9 @@ from src.domain import ContactInfoHandler
 from src.infrastructure.mail.mail import Mail
 from src.infrastructure.resume.resumeprovider import ResumeProvider
 from src.infrastructure.s3.s3 import S3Client
+from src.infrastructure.logger import create_logger
+
+logger = create_logger()
 
 
 def get_handler():
@@ -12,21 +15,28 @@ def get_handler():
     mg_api_key = os.getenv("MAILGUN_API_KEY")
     resumes_bucket = os.getenv("RESUMES_BUCKET")
 
-    mail = Mail(domain=mg_domain, api_key=mg_api_key)
+    mail = Mail(domain=mg_domain, api_key=mg_api_key, logger=logger)
 
     s3 = boto3.client('s3')
-    s3_client = S3Client(s3=s3, bucket=resumes_bucket)
+    s3_client = S3Client(s3=s3, bucket=resumes_bucket, logger=logger)
 
     cache_path = Path('/tmp')
 
-    resume = ResumeProvider(s3=s3_client, cache_folder=cache_path)
+    resume = ResumeProvider(s3=s3_client, cache_folder=cache_path, logger=logger)
 
-    return ContactInfoHandler(mail=mail, resume=resume)
+    return ContactInfoHandler(mail=mail, resume=resume, logger=logger)
 
 
 def handler(event, context):
     _handler = get_handler()
 
-    print("Received event: " + str(event))
+    logger.info("Received event: " + str(event))
     for message in event['Records']:
         _handler.handle(message=message)
+
+if __name__ == '__main__':
+    from dotenv import load_dotenv
+    load_dotenv()
+    _hand = get_handler()
+    message = { 'body': 'itsadeadh2@gmail.com' }
+    _hand.handle(message=message)

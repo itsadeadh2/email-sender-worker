@@ -12,7 +12,7 @@ class TestResumeProvider(unittest.TestCase):
         self.cache_folder = Path(__file__).parent / 'cache'
         self.resume_path = self.cache_folder / 'resume.pdf'
         self.etag_db = str(self.cache_folder / 'etag.db')
-        self.resume_provider = ResumeProvider(s3=self.mock_s3, cache_folder=self.cache_folder)
+        self.resume_provider = ResumeProvider(s3=self.mock_s3, cache_folder=self.cache_folder, logger=MagicMock())
 
     @patch('shelve.open')
     def test_set_etag(self, mock_shelve_open):

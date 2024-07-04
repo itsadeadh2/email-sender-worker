@@ -33,7 +33,7 @@ class TestMail(unittest.TestCase):
 
         requests_mock.post.return_value = dummy_response
 
-        mail = Mail(domain=dummy_domain, api_key=dummy_api_key)
+        mail = Mail(domain=dummy_domain, api_key=dummy_api_key, logger=Mock())
         mail.send_email(to=dummy_to, subject=dummy_subject, text=dummy_text, html=dummy_html, files=dummy_files)
 
         requests_mock.post.assert_called_with(expected_call_uri, **expected_call_kwargs)
@@ -67,7 +67,7 @@ class TestMail(unittest.TestCase):
 
         requestsMock.post.return_value = dummy_response
 
-        mail = Mail(domain=dummy_domain, api_key=dummy_api_key)
+        mail = Mail(domain=dummy_domain, api_key=dummy_api_key, logger=Mock())
         mail.send_email(to=dummy_to, subject=dummy_subject, text=dummy_text, html=dummy_html, files=dummy_files)
 
         requestsMock.post.assert_called_with(expected_call_uri, **expected_call_kwargs)

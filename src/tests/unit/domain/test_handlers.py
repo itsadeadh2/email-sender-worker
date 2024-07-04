@@ -27,7 +27,7 @@ class TestContactHandler(unittest.TestCase):
         parser_instance.get_html.return_value = dummy_parsed_html
         parser_instance.get_text.return_value = dummy_parsed_text
 
-        handler = ContactInfoHandler(mail=mail_mock, resume=resume_mock)
+        handler = ContactInfoHandler(mail=mail_mock, resume=resume_mock, logger=Mock())
         handler.handle(message=dummy_message)
 
         mail_mock.send_email.assert_called_with(
