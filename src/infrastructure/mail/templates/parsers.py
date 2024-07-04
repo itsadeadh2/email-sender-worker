@@ -55,16 +55,22 @@ class ContactInfoParser(Parser):
         )
     )
 
-    def __init__(self, data_override={}):
-        email_data = {**self.default_contact_info.dict(), **data_override}
+    def __init__(self, data_override=None):
+        if data_override is None:
+            data_override = {}
+        email_data = {**self.default_contact_info.model_dump(), **data_override}
         self.validated_data = ContactInfoModel(**email_data)
         super().__init__(template_name='contact_info.html')
 
-    def get_html(self, data_override={}):
-        return self.template.render(email=self.validated_data.dict())
+    def get_html(self, data_override=None):
+        if data_override is None:
+            data_override = {}
+        return self.template.render(email=self.validated_data.model_dump())
 
-    def get_text(self, data_override={}):
-        dict_data = self.validated_data.dict()
+    def get_text(self, data_override=None):
+        if data_override is None:
+            data_override = {}
+        dict_data = self.validated_data.model_dump()
         text = dict_data.get('greeting')
         text += '\n\n'
         text += dict_data.get('message')
@@ -75,4 +81,3 @@ class ContactInfoParser(Parser):
         text += '\n'
         text += 'Thiago Barbosa'
         return text
-
