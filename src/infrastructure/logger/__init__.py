@@ -3,9 +3,16 @@ from logging import StreamHandler
 
 
 def create_logger():
-    log_format = '%(levelname)s - %(message)s'
+    log_format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 
-    # Create a RotatingFileHandler to manage log file size
+    # Get the root logger
+    logger = logging.getLogger()
+
+    # Clear existing handlers
+    if logger.hasHandlers():
+        logger.handlers.clear()
+
+    # Create a StreamHandler to log to console
     handler = StreamHandler()
 
     # Create a formatter and set it for the handler
@@ -13,8 +20,5 @@ def create_logger():
     handler.setFormatter(formatter)
     handler.setLevel(logging.INFO)
 
-    # Add the handler to the Flask app's logger
-    logger = logging.getLogger()
+    # Set the logging level for the logger
     logger.setLevel(logging.INFO)
-    logger.addHandler(handler)
-    return logger
