@@ -18,4 +18,3 @@ def create_logger():
     logger.setLevel(logging.INFO)
     logger.addHandler(handler)
     return logger
-

@@ -33,10 +33,3 @@ def handler(event, context):
     logger.info("Received event: " + str(event))
     for message in event['Records']:
         _handler.handle(message=message)
-
-if __name__ == '__main__':
-    from dotenv import load_dotenv
-    load_dotenv()
-    _hand = get_handler()
-    message = { 'body': 'itsadeadh2@gmail.com' }
-    _hand.handle(message=message)

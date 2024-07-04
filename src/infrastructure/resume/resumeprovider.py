@@ -53,5 +53,5 @@ class ResumeProvider:
 
         self.__download_resume(key=resume_key)
 
-        self.__logger.info(f"Returning resume file: resume.pdf")
+        self.__logger.info("Returning resume file: resume.pdf")
         return 'resume.pdf', open(str(self.__resume_path), 'rb')
