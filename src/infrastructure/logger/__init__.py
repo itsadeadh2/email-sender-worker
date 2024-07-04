@@ -1,5 +1,4 @@
 import logging
-from logging import StreamHandler
 
 
 def create_logger():
