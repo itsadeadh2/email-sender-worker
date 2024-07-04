@@ -109,5 +109,5 @@ jobs:
         with:
           name: email-worker-lambda
           template: cloudformation/lambda.yml
-          parameter-overrides: "Revision=${{ github.run_id }},MailgunDomain=${{ secrets.MAILGUN_DOMAIN }},MailgunApiKey=${{ secrets.MAILGUN_API_KEY }}"
+          parameter-overrides: "Revision=${{ github.run_id }},MailgunDomain=${{ secrets.MAILGUN_DOMAIN }},MailgunApiKey=${{ secrets.MAILGUN_API_KEY }},ResumesBucket=${{ secrets.RESUMES_BUCKET }}"
           no-fail-on-empty-changeset: 1

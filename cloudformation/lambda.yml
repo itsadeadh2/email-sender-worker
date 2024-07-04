@@ -11,6 +11,9 @@ Parameters:
   MailgunApiKey:
     Type: String
     Description: MailGun API KEY
+  ResumesBucket:
+    Type: String
+    Description: S3 bucket that holds the resumes
 
 Resources:
   MyLambdaFunction:
@@ -30,6 +33,7 @@ Resources:
           QUEUE_URL: !ImportValue "email-worker-sqs-url-export"
           MAILGUN_DOMAIN: !Sub "${MailgunDomain}"
           MAILGUN_API_KEY: !Sub "${MailgunApiKey}"
+          RESUMES_BUCKET: !Sub "${ResumesBucket}"
       Runtime: python3.10
       MemorySize: 128
       Timeout: 30
@@ -65,6 +69,16 @@ Resources:
                   - sqs:DeleteMessage
                   - sqs:GetQueueAttributes
                 Resource: '*'
+              - Effect: Allow
+                Action:
+                  - sqs:ReceiveMessage
+                  - sqs:DeleteMessage
+                  - sqs:GetQueueAttributes
+                Resource: '*'
+              - Effect: "Allow"
+                Action:
+                  - "s3:*"
+                Resource: "*"
 
   LambdaLayer:
     Type: AWS::Lambda::LayerVersion

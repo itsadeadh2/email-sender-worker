@@ -8,13 +8,15 @@ class TestHandler(unittest.TestCase):
 
     @patch('src.lambda_function.ContactInfoHandler')
     @patch('src.lambda_function.Mail')
-    def test_handler(self, MockMail, MockContactInfoHandler):
+    @patch('src.lambda_function.ResumeProvider')
+    def test_handler(self, MockResume, MockMail, MockContactInfoHandler):
         # Set up environment variables
         os.environ['MAILGUN_DOMAIN'] = 'test_domain'
         os.environ['MAILGUN_API_KEY'] = 'test_api_key'
 
         # Create a mock Mail instance
         mock_mail_instance = MockMail.return_value
+        mock_resume_instance = MockResume.return_value
 
         # Create a mock ContactInfoHandler instance
         mock_contact_info_handler_instance = MockContactInfoHandler.return_value
@@ -33,7 +35,7 @@ class TestHandler(unittest.TestCase):
 
         # Assertions
         MockMail.assert_called_once_with(domain='test_domain', api_key='test_api_key')
-        MockContactInfoHandler.assert_called_once_with(mail=mock_mail_instance)
+        MockContactInfoHandler.assert_called_once_with(mail=mock_mail_instance, resume=mock_resume_instance)
 
         # Assert that the handle method was called for each message
         calls = [unittest.mock.call(message={'message': 'test_message_1'}),

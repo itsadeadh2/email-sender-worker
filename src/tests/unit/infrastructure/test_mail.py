@@ -13,6 +13,7 @@ class TestMail(unittest.TestCase):
         dummy_subject = 'My Test Email'
         dummy_text = 'Hi this is a test email'
         dummy_html = 'Null'
+        dummy_files = {}
 
         expected_call_uri = f"https://api.mailgun.net/v3/{dummy_domain}/messages"
         expected_call_kwargs = {
@@ -23,7 +24,8 @@ class TestMail(unittest.TestCase):
                 "subject": dummy_subject,
                 "text": dummy_text,
                 "html": dummy_html
-            }
+            },
+            'files': dummy_files
         }
 
         dummy_response = Mock()
@@ -32,7 +34,7 @@ class TestMail(unittest.TestCase):
         requests_mock.post.return_value = dummy_response
 
         mail = Mail(domain=dummy_domain, api_key=dummy_api_key)
-        mail.send_email(to=dummy_to, subject=dummy_subject, text=dummy_text, html=dummy_html)
+        mail.send_email(to=dummy_to, subject=dummy_subject, text=dummy_text, html=dummy_html, files=dummy_files)
 
         requests_mock.post.assert_called_with(expected_call_uri, **expected_call_kwargs)
         dummy_response.json.assert_called_once()
@@ -45,6 +47,7 @@ class TestMail(unittest.TestCase):
         dummy_subject = 'My Test Email'
         dummy_text = 'Hi this is a test email'
         dummy_html = 'Null'
+        dummy_files = {}
 
         expected_call_uri = f"https://api.mailgun.net/v3/{dummy_domain}/messages"
         expected_call_kwargs = {
@@ -55,7 +58,8 @@ class TestMail(unittest.TestCase):
                 "subject": dummy_subject,
                 "text": dummy_text,
                 "html": dummy_html
-            }
+            },
+            'files': dummy_files
         }
 
         dummy_response = Mock()
@@ -64,7 +68,7 @@ class TestMail(unittest.TestCase):
         requestsMock.post.return_value = dummy_response
 
         mail = Mail(domain=dummy_domain, api_key=dummy_api_key)
-        mail.send_email(to=dummy_to, subject=dummy_subject, text=dummy_text, html=dummy_html)
+        mail.send_email(to=dummy_to, subject=dummy_subject, text=dummy_text, html=dummy_html, files=dummy_files)
 
         requestsMock.post.assert_called_with(expected_call_uri, **expected_call_kwargs)
         dummy_response.raise_for_status.assert_called_once()

@@ -6,10 +6,11 @@ class Mail:
         self.domain = domain
         self.api_key = api_key
 
-    def send_email(self, to, subject, text, html=None):
+    def send_email(self, to, subject, text, html=None, files: dict = None):
         response = requests.post(
             f"https://api.mailgun.net/v3/{self.domain}/messages",
             auth=("api", self.api_key),
+            files=files,
             data={
                 "from": f"Thiago Barbosa via MailGun <mailgun@{self.domain}>",
                 "to": [to],
