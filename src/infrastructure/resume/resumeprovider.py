@@ -6,7 +6,7 @@ class ResumeProvider:
         self.__logger = logger
 
     def retrieve(self) -> tuple:
-        resume_path = 'resume.pdf'
+        resume_path = '/tmp/resume.pdf'
         self.__logger.info(f"Downloading resume from {resume_path}")
         resume_page = "https://resume.itsadeadh2.com"
         pdfkit_config = pdfkit.configuration(wkhtmltopdf='/usr/bin/wkhtmltopdf')
