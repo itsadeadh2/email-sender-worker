@@ -6,4 +6,3 @@ pydantic[email]
 jinja2
 weasyprint
 pdfkit
-pyhtml2pdf
