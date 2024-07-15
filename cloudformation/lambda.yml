@@ -32,7 +32,6 @@ Resources:
           QUEUE_URL: !ImportValue "email-worker-sqs-url-export"
           MAILGUN_DOMAIN: !Sub "${MailgunDomain}"
           MAILGUN_API_KEY: !Sub "${MailgunApiKey}"
-          RESUMES_BUCKET: !Sub "${ResumesBucket}"
       PackageType: Image
       MemorySize: 128
       Timeout: 30
