@@ -1,4 +1,4 @@
-FROM 3.12-slim-bullseye
+FROM python:3.12-slim-bullseye
 WORKDIR /app
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONPATH='/app'
