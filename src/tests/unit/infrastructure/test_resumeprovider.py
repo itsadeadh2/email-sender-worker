@@ -14,9 +14,9 @@ class TestResumeProvider(unittest.TestCase):
     def test_download_and_parse_resume(self, pdfkit_mock, open_mock):
         key, content = self.resume_provider.retrieve()
         pdfkit_mock.configuration.assert_called_once_with(wkhtmltopdf='/usr/bin/wkhtmltopdf')
-        pdfkit_mock.from_url.assert_called_once_with('https://resume.itsadeadh2.com', 'resume.pdf',
+        pdfkit_mock.from_url.assert_called_once_with('https://resume.itsadeadh2.com', '/tmp/resume.pdf',
                                                      configuration=pdfkit_mock.configuration.return_value)
-        open_mock.assert_called_once_with('resume.pdf', 'rb')
+        open_mock.assert_called_once_with('/tmp/resume.pdf', 'rb')
         self.assertEqual(key, 'resume.pdf')
 
 
