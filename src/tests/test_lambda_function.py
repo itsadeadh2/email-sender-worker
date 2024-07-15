@@ -1,7 +1,7 @@
 import os
 import unittest
 from unittest.mock import patch
-from src.lambda_function import handler
+from src.lambda_function import handle
 
 
 class TestHandler(unittest.TestCase):
@@ -32,7 +32,7 @@ class TestHandler(unittest.TestCase):
         mock_context = {}  # Context is not used in this handler
 
         # Call the handler function
-        handler(mock_event, mock_context)
+        handle(mock_event, mock_context)
 
         # Assertions
         MockMail.assert_called_once_with(domain='test_domain', api_key='test_api_key', logger=mock_logger_instance)
