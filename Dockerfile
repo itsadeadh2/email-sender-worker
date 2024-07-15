@@ -1,8 +1,11 @@
-FROM python:3.10.4-alpine
-ENV PYTHONUNBUFFERED=1
+FROM 3.12-slim-bullseye
 WORKDIR /app
-COPY requirements.txt requirements.txt
-RUN pip install --no-cache-dir --upgrade -r requirements.txt
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH='/app'
+
+RUN apt-get update && apt-get install -y wkhtmltopdf
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 COPY . .
-ENV PYTHONPATH '/app'
-CMD ["sh", "/app/start.sh"]
+
+CMD ["src.lambda_function.handle"]

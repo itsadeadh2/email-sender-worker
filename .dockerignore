@@ -1,0 +1,7 @@
+.github/
+cloudformation/
+venv/
+.coverage/
+*.env
+.env
+src/tests/
