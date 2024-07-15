@@ -70,7 +70,7 @@ jobs:
     name: Push image to ECR
     runs-on: ubuntu-latest
     environment: production
-    needs: [ deploy-infra, test ]
+    needs: [ deploy_infra, test ]
 
     steps:
       - name: Checkout
