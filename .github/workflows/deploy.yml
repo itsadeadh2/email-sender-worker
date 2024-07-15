@@ -39,15 +39,11 @@ jobs:
     name: Deploy infrastructure
     runs-on: ubuntu-latest
     environment: production
+    needs: ['test']
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Install python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -63,18 +59,56 @@ jobs:
           template: cloudformation/sqs.yml
           no-fail-on-empty-changeset: 1
 
-      - name: Deploy bucket
+      - name: Deploy ECR
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
-          name: email-worker-bucket
-          template: cloudformation/s3.yml
+          name: email-worker-ecr
+          template: cloudformation/ecr.yml
           no-fail-on-empty-changeset: 1
+
+  push-image:
+    name: Push image to ECR
+    runs-on: ubuntu-latest
+    environment: production
+    needs: [ deploy-infra, test ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registries: ${{ secrets.AWS_ACCOUNT_ID }}
+          mask-password: "true"
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-publish
+        shell: bash
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: email-worker-ecr
+          IMAGE_TAG: ${{ github.run_id }}
+        run: |
+          docker build -t "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" .
+          docker push "$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          echo "IMAGE $IMAGE_TAG is pushed to $ECR_REGISTRY/$ECR_REPOSITORY"
+          echo "image_tag=$IMAGE_TAG" 
+          echo "full_image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
 
   deploy_service:
     name: Deploy service to lambda
     runs-on: ubuntu-latest
     environment: production
-    needs: ['deploy_infra', 'test']
+    needs: ['deploy_infra', 'push-image', 'test']
 
     steps:
       - name: Checkout
@@ -91,18 +125,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
-
-      - name: Zip and Upload lambda
-        run: |
-          python -m venv venv          
-          source venv/bin/activate
-          pip install -r requirements.txt
-          mkdir python
-          cp -r venv/lib python/
-          zip -r dependencies.zip python
-          zip -r lambda.zip src
-          aws s3 cp lambda.zip s3://email-worker-bucket/${{ github.run_id }}.zip
-          aws s3 cp dependencies.zip s3://email-worker-bucket/dependencies.zip
 
       - name: Deploy lambda
         uses: aws-actions/aws-cloudformation-github-deploy@v1

@@ -12,7 +12,7 @@ class ResumeProvider:
         pdfkit_config = pdfkit.configuration(wkhtmltopdf='/usr/bin/wkhtmltopdf')
         pdfkit.from_url(resume_page, resume_path, configuration=pdfkit_config)
 
-        return 'resume.pdf', open(str(resume_path), 'rb')
+        return 'resume.pdf', open(resume_path, 'rb')
 
 
 if __name__ == "__main__":
